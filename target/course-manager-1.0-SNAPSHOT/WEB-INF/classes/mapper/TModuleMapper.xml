@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TModuleMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TModule" >
+    <id column="module_id" property="moduleId" jdbcType="BIGINT" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="content_id" property="contentId" jdbcType="INTEGER" />
+    <result column="assessment_id" property="assessmentId" jdbcType="INTEGER" />
+    <result column="lo_id" property="loId" jdbcType="INTEGER" />
+    <result column="program_code" property="programCode" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithBLOBs" type="uk.ac.sheffield.coursemgr.domain.pojo.TModule" extends="BaseResultMap" >
+    <result column="objectives" property="objectives" jdbcType="LONGVARCHAR" />
+    <result column="module_title" property="moduleTitle" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithPart" type="java.util.HashMap" >
+      <result column="module_id" property="moduleId" jdbcType="BIGINT" />
+      <result column="module_title" property="moduleTitle" jdbcType="VARCHAR" />
+      <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithAims" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAim">
+    <id column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="aim_description" property="aimDescription" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithLos" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+    <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithAssessments" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment">
+    <id column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="assessment_type" property="assessmentType" jdbcType="VARCHAR" />
+    <result column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="percentage" property="percentage" jdbcType="INTEGER" />
+    <result column="assessment_title" property="assessmentTitle" jdbcType="VARCHAR" />
+    <result column="assessment_release" property="assessmentRelease" jdbcType="TIMESTAMP"/>
+    <result column="assessment_submit" property="assessmentSubmit" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <resultMap id="ResultMapWithContents" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent">
+    <id column="content_id" property="contentId" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="connect_content_id" property="connectContentId" jdbcType="BIGINT" />
+    <result column="content_prerequisite" property="contentPrerequisite" jdbcType="BIGINT" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    module_id, module_code, aim_id, content_id, assessment_id, lo_id, program_code, create_by,
+    create_time, update_by, update_time
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    objectives,module_title
+  </sql>
+
+  <sql id="Part_Column_List" >
+    module_id, module_title, create_by
+  </sql>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModule" >
+    insert into t_module (module_id, module_code, aim_id,
+                          content_id, assessment_id, lo_id,
+                          program_code, create_by, create_time,
+                          update_by, update_time, objectives,module_title
+    )
+    values (#{moduleId,jdbcType=BIGINT}, #{moduleCode,jdbcType=VARCHAR}, #{aimId,jdbcType=INTEGER},
+            #{contentId,jdbcType=INTEGER}, #{assessmentId,jdbcType=INTEGER}, #{loId,jdbcType=INTEGER},
+            #{programCode,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+            #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{objectives,jdbcType=LONGVARCHAR},
+            #{moduleTitle,jdbcType=VARCHAR}
+           )
+  </insert>
+
+  <!--delete a module -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_module
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModule" >
+    update t_module
+    set module_code = #{moduleCode,jdbcType=VARCHAR},
+        aim_id = #{aimId,jdbcType=INTEGER},
+        content_id = #{contentId,jdbcType=VARCHAR},
+        assessment_id = #{assessmentId,jdbcType=VARCHAR},
+        lo_id = #{loId,jdbcType=VARCHAR},
+        program_code = #{programCode,jdbcType=VARCHAR},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectAll"  resultMap="ResultMapWithBLOBs" >
+    select * from t_module
+  </select>
+
+  <select id="selectPartModule"  resultMap="ResultMapWithPart">
+    select
+    <include refid="Part_Column_List" />
+    from t_module
+  </select>
+
+  <select id="selectPartModuleByAim"  resultMap="ResultMapWithPart">
+    select
+    <include refid="Part_Column_List" />
+    from t_module
+    where aim_id = #{aim_id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectPartModuleByLo"  resultMap="ResultMapWithPart">
+    select
+    <include refid="Part_Column_List" />
+    from t_module
+    where lo_id = #{lo_id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_module
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAims" resultMap="ResultMapWithAims" parameterType="java.lang.Long">
+    select aim_id,aim_description
+    from t_module_aim
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectLos" resultMap="ResultMapWithLos" parameterType="java.lang.Long">
+    select module_lo_id, context
+    from t_module_lo
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAssessments" resultMap="ResultMapWithAssessments" parameterType="java.lang.Long">
+    select assessment_id, assessment_type, aim_id, percentage, assessment_title, assessment_release, assessment_submit
+    from t_module_assessment
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectContents" resultMap="ResultMapWithContents" parameterType="java.lang.Long">
+    select content_id, context,module_code,connect_content_id,content_prerequisite
+    from t_module_content
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </select>
+
+
+
+
+</mapper>

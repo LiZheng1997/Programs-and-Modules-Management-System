@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TOptionalModuleMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TOptionalModule" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="optional_module_id" property="optionalModuleId" jdbcType="BIGINT" />
+    <result column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, optional_module_id, program_id, create_by,
+    create_time, update_by, update_time
+  </sql>
+
+  <select id="countOptionalModule" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TOptionalModule" resultType="java.lang.Integer" >
+    select count(*) from t_optional_module
+  </select>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TOptionalModule" >
+    insert into t_optional_module (id, optional_module_id, program_id, create_by,
+                                              create_time, update_by, update_time
+    )
+    values (#{id,jdbcType=BIGINT}, #{optionalModuleId,jdbcType=BIGINT}, #{programId,jdbcType=BIGINT}, #{createBy,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+           )
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from t_optional_module
+    where program_id = #{programId,jdbcType=BIGINT} and optional_module_id = #{optionalModuleId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TOptionalModule" >
+    update t_optional_module
+    set optional_module_id = #{optionalModuleId,jdbcType=BIGINT}
+        program_id = #{programId,jdbcType=BIGINT},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_optional_module
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll"  resultMap="BaseResultMap" >
+    select * from t_optional_module
+  </select>
+
+
+
+
+
+
+</mapper>

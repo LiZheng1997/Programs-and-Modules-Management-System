@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TMContentToAssessmentMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TMContentToAssessment" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="content_id" property="contentId" jdbcType="BIGINT" />
+    <result column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="number" property="number" jdbcType="INTEGER" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+
+  <sql id="baseSql">
+        id, content_id, assessment_id, number, create_by, create_time, update_by , update_time
+  </sql>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TMContentToAssessment" >
+    insert into t_module_content_to_assessment (id,content_id, assessment_id, number, create_by,
+                                          create_time, update_by, update_time
+    )
+    values (#{id,jdbcType=BIGINT},#{contentId,jdbcType=BIGINT}, #{assessmentId,jdbcType=BIGINT}, #{number,jdbcType=INTEGER},#{createBy,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+           )
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_module_content_to_assessment
+    where content_id = #{contentId,jdbcType=INTEGER}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TMContentToAssessment" >
+    update t_module_content_to_assessment
+    set assessment_id =  #{assessmentId,jdbcType=BIGINT},
+        content_id = #{contentId,jdbcType=BIGINT},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=VARCHAR},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        number =  #{number,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="baseSql" />
+    from t_module_content_to_assessment
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+
+
+
+
+
+
+</mapper>

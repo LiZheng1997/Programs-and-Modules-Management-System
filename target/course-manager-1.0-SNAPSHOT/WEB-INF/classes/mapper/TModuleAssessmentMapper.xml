@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TModuleAssessmentMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment" >
+    <id column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="module_id" property="moduleId" jdbcType="BIGINT" />
+    <result column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="module_prerequisite" property="modulePrerequisite" jdbcType="VARCHAR" />
+    <result column="assessment_type" property="assessmentType" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="percentage" property="percentage" jdbcType="INTEGER" />
+    <result column="issued_time" property="issuedTime" jdbcType="TIMESTAMP" />
+    <result column="submit_time" property="submitTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <!--many to many between assessment and Los -->
+  <resultMap id="AssessmentToLo"   type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment">
+    <id column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="assessment_type" property="assessmentType" jdbcType="VARCHAR" />
+    <result column="percentage" property="percentage" jdbcType="INTEGER" />
+    <result column="assessment_title" property="assessmentTitle" jdbcType="VARCHAR" />
+    <result column="assessment_release" property="assessmentRelease" jdbcType="TIMESTAMP"/>
+    <result column="assessment_submit" property="assessmentSubmit" jdbcType="TIMESTAMP"/>
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <collection property="moduleLos" ofType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+      <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+      <result column="lo_title" property="loTitle" jdbcType="VARCHAR" />
+      <result column="context" property="context" jdbcType="VARCHAR" />
+      <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+  <!--many to many between assessment and aims -->
+  <resultMap id="AssessmentToAim" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment">
+    <id column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="assessment_type" property="assessmentType" jdbcType="VARCHAR" />
+    <result column="percentage" property="percentage" jdbcType="INTEGER" />
+    <result column="assessment_title" property="assessmentTitle" jdbcType="VARCHAR" />
+    <result column="assessment_release" property="assessmentRelease" jdbcType="TIMESTAMP"/>
+    <result column="assessment_submit" property="assessmentSubmit" jdbcType="TIMESTAMP"/>
+    <collection property="moduleAims" ofType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAim">
+      <id column="aim_id" property="aimId" jdbcType="BIGINT" />
+      <result column="aim_description" property="aimDescription" jdbcType="VARCHAR" />
+      <result column="module_title" property="moduleTitle" jdbcType="VARCHAR" />
+      <result column="module_assessment_id" property="moduleAssessmentId" jdbcType="BIGINT" />
+    </collection>
+  </resultMap>
+
+  <resultMap id="ResultMapWithAims" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAim">
+    <id column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="aim_description" property="aimDescription" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithLos" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+    <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="lo_title" property="loTitle" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithContents" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent">
+    <id column="content_id" property="contentId" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="connect_content_id" property="connectContentId" jdbcType="BIGINT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    assessment_id, module_id,module_code, aim_id,module_prerequisite, assessment_type, create_by,
+    create_time, update_by, update_time,percentage,issued_time,submit_time
+  </sql>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment" >
+    insert into t_module_assessment (assessment_id,module_id, aim_id, module_code,
+                                     assessment_title, assessment_release, assessment_submit,
+                                     module_prerequisite, assessment_type, create_by,
+                                     create_time, update_by, update_time,percentage,issued_time,submit_time
+    )
+    values (#{assessmentId,jdbcType=BIGINT}, #{moduleId,jdbcType=BIGINT}, #{aimId,jdbcType=BIGINT},#{moduleCode,jdbcType=VARCHAR},
+            #{assessmentTitle,jdbcType=VARCHAR},#{assessmentRelease,jdbcType=TIMESTAMP},#{assessmentSubmit,jdbcType=TIMESTAMP},
+            #{modulePrerequisite,jdbcType=VARCHAR}, #{assessmentType,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},#{percentage,jdbcType=INTEGER},
+            #{issuedTime,jdbcType=TIMESTAMP},#{submitTime,jdbcType=TIMESTAMP}
+           )
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_module_assessment
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment" >
+    update t_module_assessment
+    set module_id = #{moduleId,jdbcType=BIGINT},
+        aim_id = #{aimId,jdbcType=BIGINT},
+        module_code = #{moduleCode,jdbcType=VARCHAR},
+        module_prerequisite = #{modulePrerequisite,jdbcType=VARCHAR},
+        assessment_type = #{assessmentType,jdbcType=VARCHAR},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        percentage = #{percentage,jdbcType=INTEGER},
+        issued_time = #{issuedTime,jdbcType=TIMESTAMP},
+        submit_time = #{submitTime,jdbcType=TIMESTAMP}
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </update>
+
+  <!--select all info from assessment and aims  -->
+  <select id="selectAssessmentAims" resultMap="AssessmentToAim">
+    select ta.*, a.*
+    from t_module_assessment ta
+    left join t_module_aim a on ta.assessment_id = a.module_assessment_id
+  </select>
+
+  <!--select all info from assessment and lo  -->
+  <select id="selectAssessmentLos" resultMap="AssessmentToLo">
+    select
+    a.*, l.* from
+    t_module_assessment a, t_module_lo l, t_module_assessment_to_lo al
+    where a.assessment_id = al.module_assessment_id and l.module_lo_id = al.module_lo_id
+  </select>
+
+  <select id="selectLOs" parameterType="java.lang.Long" resultMap="ResultMapWithLos">
+    select lo_title,module_lo_id
+    from t_module_assessment_to_lo
+    where module_assessment_id = #{moduleAssessmentId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAims" parameterType="java.lang.Long" resultMap="ResultMapWithAims">
+    select aim_id,aim_description
+    from t_module_aim
+    where module_assessment_id = #{moduleAssessmentId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectContents" resultMap="ResultMapWithContents" parameterType="java.lang.Long">
+    select content_id, context,module_code,connect_content_id
+    from t_module_content_to_assessment
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_module_assessment
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TModuleContentMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent" >
+    <id column="content_id" property="contentId" jdbcType="BIGINT" />
+    <result column="module_id" property="moduleId" jdbcType="BIGINT" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="content_prerequisite" property="contentPrerequisite" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="connect_content_id" property="connectContentId" jdbcType="BIGINT" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <!--many to many between assessment and aims -->
+  <resultMap id="ContentToLo" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent">
+    <id column="content_id" property="contentId" jdbcType="BIGINT" />
+    <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <collection property="moduleLos" ofType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+      <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+      <result column="lo_title" property="loTitle" jdbcType="VARCHAR" />
+      <result column="context" property="context" jdbcType="VARCHAR" />
+      <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+  <resultMap id="ResultMapWithLos" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+    <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithAssessments" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAssessment">
+    <id column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="assessment_type" property="assessmentType" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    content_id,module_id, module_code, content_prerequisite, context, connect_content_id,
+    create_by, create_time, update_by, update_time
+  </sql>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent" >
+    insert into t_module_content (content_id, content_prerequisite,module_code,
+                                  context, connect_content_id,
+                                  create_by, create_time, update_by,module_id,
+                                  update_time)
+    values (#{contentId,jdbcType=BIGINT}, #{contentPrerequisite,jdbcType=BIGINT},#{moduleCode,jdbcType=VARCHAR},
+            #{context,jdbcType=VARCHAR}, #{connectContentId,jdbcType=BIGINT},
+            #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR},
+           #{moduleId,jdbcType=BIGINT}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_module_content
+    where content_id = #{contentId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent" >
+    update t_module_content
+    set module_id = #{moduleId,jdbcType=BIGINT},
+        module_code = #{moduleCode,jdbcType=VARCHAR},
+        content_prerequisite = #{contentPrerequisite,jdbcType=BIGINT},
+        context = #{context,jdbcType=VARCHAR},
+        connect_content_id = #{connectContentId,jdbcType=BIGINT},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where content_id = #{contentId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_module_content
+    where content_id = #{contentId,jdbcType=BIGINT}
+  </select>
+
+  <!--select connect_content_id from   -->
+  <select id="selectConnectContentById" parameterType="java.lang.Long" resultType="java.lang.Long">
+    select connect_content_id
+    from t_module_content
+    where content_id = #{contentId, jdbcType=BIGINT }
+  </select>
+
+  <select id="selectAll" resultType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleContent">
+    select * from t_module_content
+    where content_id = #{contentId ,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectContentPrerequisite" parameterType="java.lang.Long" resultType="java.lang.Long">
+    select content_prerequisite from t_module_content
+    where content_id =  #{contentId, jdbcType=BIGINT}
+  </select>
+
+  <select id="selectLos" parameterType="java.lang.Long" resultMap="ResultMapWithLos">
+    select module_lo_id
+    from t_module_content_to_lo
+    where module_content_id = #{moduleContentId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAssessments" resultMap="ResultMapWithAssessments" parameterType="java.lang.Long">
+    select assessment_id, assessment_type
+    from t_module_assessment
+    where content_id = #{contentId,jdbcType=BIGINT}
+  </select>
+
+  <!--select all info from assessment and lo  -->
+  <select id="selectContentLos" resultMap="ContentToLo">
+    select
+    c.*, l.* from
+    t_module_content c, t_module_lo l, t_module_content_to_lo cl
+    where c.content_id = cl.module_content_id and l.module_lo_id = cl.module_lo_id
+  </select>
+
+</mapper>

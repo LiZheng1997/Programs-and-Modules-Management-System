@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TModuleAimMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAim" >
+    <id column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="aim_description" property="aimDescription" jdbcType="VARCHAR" />
+    <result column="module_id" property="moduleId" jdbcType="BIGINT" />
+    <result column="module_assessment_id" property="moduleAssessmentId" jdbcType="BIGINT" />
+    <result column="module_title" property="moduleTitle" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    aim_id, aim_description,module_id, module_assessment_id, module_title,create_by, create_time, update_by, update_time
+  </sql>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAim" >
+    insert into t_module_aim (aim_id, aim_description,module_id,module_assessment_id,module_title,
+                               create_by, create_time, update_by,
+                               update_time)
+    values (#{aimId,jdbcType=BIGINT}, #{aimDescription,jdbcType=VARCHAR},#{moduleId,jdbcType=BIGINT},#{moduleAssessmentId,jdbcType=BIGINT},
+            #{moduleTitle,jdbcType=VARCHAR},#{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_module_aim
+    where aim_id = #{aimId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="update" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleAim" >
+    update t_module_aim
+    set aim_description = #{aimDescription,jdbcType=VARCHAR},
+        module_id = #{moduleId,jdbcType=BIGINT},
+        module_assessment_id = #{moduleAssessmentId,jdbcType=BIGINT},
+        module_title = #{moduleTitle,jdbcType=VARCHAR},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where aim_id = #{aimId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_module_aim
+    where aim_id = #{aimId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select *
+    from t_module_aim
+  </select>
+
+
+
+
+</mapper>

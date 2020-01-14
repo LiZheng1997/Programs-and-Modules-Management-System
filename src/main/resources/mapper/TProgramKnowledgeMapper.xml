@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TProgramKnowledgeMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge" >
+    <id column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+    <result column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="knowledge_context" property="knowledgeContext" jdbcType="VARCHAR" />
+    <result column="program_code" property="programCode" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="KnowledgeToLo"   type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge">
+    <id column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+    <result column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="knowledge_context" property="knowledgeContext" jdbcType="VARCHAR" />
+    <result column="program_code" property="programCode" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <collection property="moduleLos" ofType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+      <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+      <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+      <result column="context" property="context" jdbcType="VARCHAR" />
+      <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+  <resultMap id="ResultMapWithBLOBs" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge" extends="BaseResultMap" >
+    <result column="knowledge_context" property="knowledgeContext" jdbcType="LONGVARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    knowledge_id, program_code, create_by, create_time, update_by, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    knowledge_context
+  </sql>
+
+  <!--select all info from program knowledge and lo  -->
+  <select id="selectModuleLoKnowledge" resultMap="KnowledgeToLo">
+    select
+      k.*, l.* from
+      t_program_knowledge k, t_module_lo l, t_program_knowledge_to_module_lo kl
+    where k.knowledge_id = kl.knowledge_id and l.module_lo_id = kl.lo_id and k.knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </select>
+
+  <!--select all info from program knowledge and lo  -->
+  <select id="selectKnowledgeToLo" resultMap="KnowledgeToLo">
+    select
+      k.*, l.* from
+                 t_program_knowledge k, t_module_lo l, t_program_knowledge_to_module_lo kl
+    where k.knowledge_id = kl.knowledge_id and l.module_lo_id = kl.lo_id
+  </select>
+
+  <select id="countProgramKnowledge" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge" resultType="java.lang.Integer" >
+    select count(*) from t_program_knowledge
+  </select>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge" >
+    insert into t_program_knowledge (knowledge_id, program_id,program_code, create_by,
+                                     create_time, update_by, update_time,
+                                     knowledge_context)
+    values (#{knowledgeId,jdbcType=BIGINT}, #{programId,jdbcType=BIGINT},#{programCode,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{knowledgeContext,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_program_knowledge
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge" >
+    update t_program_knowledge
+    set program_code = #{programCode,jdbcType=VARCHAR},
+        program_id = #{programId,jdbcType=BIGINT},
+        knowledge_context = #{knowledgeContext,jdbcType=LONGVARCHAR},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_program_knowledge
+    where knowledge_id = #{knowledgeId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll"  resultMap="BaseResultMap" >
+    select * from t_program_knowledge
+  </select>
+
+
+
+
+
+
+
+</mapper>

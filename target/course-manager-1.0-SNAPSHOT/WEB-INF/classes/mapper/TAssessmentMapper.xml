@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TAssessmentMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TAssessment" >
+    <id column="assessment_id" property="assessmentId" jdbcType="BIGINT" />
+    <result column="submitter" property="submitter" jdbcType="VARCHAR" />
+    <result column="module_module_code" property="moduleModuleCode" jdbcType="VARCHAR" />
+    <result column="semester" property="semester" jdbcType="VARCHAR" />
+    <result column="format" property="format" jdbcType="VARCHAR" />
+    <result column="assessment_name" property="assessmentName" jdbcType="VARCHAR" />
+    <result column="percentage_of_module" property="percentageOfModule" jdbcType="INTEGER" />
+    <result column="week_issued" property="weekIssued" jdbcType="VARCHAR" />
+    <result column="week_due" property="weekDue" jdbcType="VARCHAR" />
+    <result column="credits" property="credits" jdbcType="VARCHAR" />
+    <result column="keywords_for_assessement" property="keywordsForAssessement" jdbcType="VARCHAR" />
+    <result column="real_assessment" property="realAssessment" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    assessment_id, submitter, module_module_code, semester, format, assessment_name, 
+    percentage_of_module, week_issued, week_due, credits, keywords_for_assessement, real_assessment, 
+    content, create_by, create_time, update_by, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessmentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_assessment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_assessment
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_assessment
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessmentExample" >
+    delete from t_assessment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessment" >
+    insert into t_assessment (assessment_id, submitter, module_module_code, 
+      semester, format, assessment_name, 
+      percentage_of_module, week_issued, week_due, 
+      credits, keywords_for_assessement, real_assessment, 
+      content, create_by, create_time, 
+      update_by, update_time)
+    values (#{assessmentId,jdbcType=BIGINT}, #{submitter,jdbcType=VARCHAR}, #{moduleModuleCode,jdbcType=VARCHAR}, 
+      #{semester,jdbcType=VARCHAR}, #{format,jdbcType=VARCHAR}, #{assessmentName,jdbcType=VARCHAR}, 
+      #{percentageOfModule,jdbcType=INTEGER}, #{weekIssued,jdbcType=VARCHAR}, #{weekDue,jdbcType=VARCHAR}, 
+      #{credits,jdbcType=VARCHAR}, #{keywordsForAssessement,jdbcType=VARCHAR}, #{realAssessment,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=VARCHAR}, 
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessment" >
+    insert into t_assessment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="assessmentId != null" >
+        assessment_id,
+      </if>
+      <if test="submitter != null" >
+        submitter,
+      </if>
+      <if test="moduleModuleCode != null" >
+        module_module_code,
+      </if>
+      <if test="semester != null" >
+        semester,
+      </if>
+      <if test="format != null" >
+        format,
+      </if>
+      <if test="assessmentName != null" >
+        assessment_name,
+      </if>
+      <if test="percentageOfModule != null" >
+        percentage_of_module,
+      </if>
+      <if test="weekIssued != null" >
+        week_issued,
+      </if>
+      <if test="weekDue != null" >
+        week_due,
+      </if>
+      <if test="credits != null" >
+        credits,
+      </if>
+      <if test="keywordsForAssessement != null" >
+        keywords_for_assessement,
+      </if>
+      <if test="realAssessment != null" >
+        real_assessment,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="assessmentId != null" >
+        #{assessmentId,jdbcType=BIGINT},
+      </if>
+      <if test="submitter != null" >
+        #{submitter,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleModuleCode != null" >
+        #{moduleModuleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="semester != null" >
+        #{semester,jdbcType=VARCHAR},
+      </if>
+      <if test="format != null" >
+        #{format,jdbcType=VARCHAR},
+      </if>
+      <if test="assessmentName != null" >
+        #{assessmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="percentageOfModule != null" >
+        #{percentageOfModule,jdbcType=INTEGER},
+      </if>
+      <if test="weekIssued != null" >
+        #{weekIssued,jdbcType=VARCHAR},
+      </if>
+      <if test="weekDue != null" >
+        #{weekDue,jdbcType=VARCHAR},
+      </if>
+      <if test="credits != null" >
+        #{credits,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordsForAssessement != null" >
+        #{keywordsForAssessement,jdbcType=VARCHAR},
+      </if>
+      <if test="realAssessment != null" >
+        #{realAssessment,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessmentExample" resultType="java.lang.Integer" >
+    select count(*) from t_assessment
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_assessment
+    <set >
+      <if test="record.assessmentId != null" >
+        assessment_id = #{record.assessmentId,jdbcType=BIGINT},
+      </if>
+      <if test="record.submitter != null" >
+        submitter = #{record.submitter,jdbcType=VARCHAR},
+      </if>
+      <if test="record.moduleModuleCode != null" >
+        module_module_code = #{record.moduleModuleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.semester != null" >
+        semester = #{record.semester,jdbcType=VARCHAR},
+      </if>
+      <if test="record.format != null" >
+        format = #{record.format,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assessmentName != null" >
+        assessment_name = #{record.assessmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.percentageOfModule != null" >
+        percentage_of_module = #{record.percentageOfModule,jdbcType=INTEGER},
+      </if>
+      <if test="record.weekIssued != null" >
+        week_issued = #{record.weekIssued,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weekDue != null" >
+        week_due = #{record.weekDue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.credits != null" >
+        credits = #{record.credits,jdbcType=VARCHAR},
+      </if>
+      <if test="record.keywordsForAssessement != null" >
+        keywords_for_assessement = #{record.keywordsForAssessement,jdbcType=VARCHAR},
+      </if>
+      <if test="record.realAssessment != null" >
+        real_assessment = #{record.realAssessment,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createBy != null" >
+        create_by = #{record.createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateBy != null" >
+        update_by = #{record.updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_assessment
+    set assessment_id = #{record.assessmentId,jdbcType=BIGINT},
+      submitter = #{record.submitter,jdbcType=VARCHAR},
+      module_module_code = #{record.moduleModuleCode,jdbcType=VARCHAR},
+      semester = #{record.semester,jdbcType=VARCHAR},
+      format = #{record.format,jdbcType=VARCHAR},
+      assessment_name = #{record.assessmentName,jdbcType=VARCHAR},
+      percentage_of_module = #{record.percentageOfModule,jdbcType=INTEGER},
+      week_issued = #{record.weekIssued,jdbcType=VARCHAR},
+      week_due = #{record.weekDue,jdbcType=VARCHAR},
+      credits = #{record.credits,jdbcType=VARCHAR},
+      keywords_for_assessement = #{record.keywordsForAssessement,jdbcType=VARCHAR},
+      real_assessment = #{record.realAssessment,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      create_by = #{record.createBy,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=VARCHAR},
+      update_by = #{record.updateBy,jdbcType=VARCHAR},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessment" >
+    update t_assessment
+    <set >
+      <if test="submitter != null" >
+        submitter = #{submitter,jdbcType=VARCHAR},
+      </if>
+      <if test="moduleModuleCode != null" >
+        module_module_code = #{moduleModuleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="semester != null" >
+        semester = #{semester,jdbcType=VARCHAR},
+      </if>
+      <if test="format != null" >
+        format = #{format,jdbcType=VARCHAR},
+      </if>
+      <if test="assessmentName != null" >
+        assessment_name = #{assessmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="percentageOfModule != null" >
+        percentage_of_module = #{percentageOfModule,jdbcType=INTEGER},
+      </if>
+      <if test="weekIssued != null" >
+        week_issued = #{weekIssued,jdbcType=VARCHAR},
+      </if>
+      <if test="weekDue != null" >
+        week_due = #{weekDue,jdbcType=VARCHAR},
+      </if>
+      <if test="credits != null" >
+        credits = #{credits,jdbcType=VARCHAR},
+      </if>
+      <if test="keywordsForAssessement != null" >
+        keywords_for_assessement = #{keywordsForAssessement,jdbcType=VARCHAR},
+      </if>
+      <if test="realAssessment != null" >
+        real_assessment = #{realAssessment,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null" >
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateBy != null" >
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TAssessment" >
+    update t_assessment
+    set submitter = #{submitter,jdbcType=VARCHAR},
+      module_module_code = #{moduleModuleCode,jdbcType=VARCHAR},
+      semester = #{semester,jdbcType=VARCHAR},
+      format = #{format,jdbcType=VARCHAR},
+      assessment_name = #{assessmentName,jdbcType=VARCHAR},
+      percentage_of_module = #{percentageOfModule,jdbcType=INTEGER},
+      week_issued = #{weekIssued,jdbcType=VARCHAR},
+      week_due = #{weekDue,jdbcType=VARCHAR},
+      credits = #{credits,jdbcType=VARCHAR},
+      keywords_for_assessement = #{keywordsForAssessement,jdbcType=VARCHAR},
+      real_assessment = #{realAssessment,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where assessment_id = #{assessmentId,jdbcType=BIGINT}
+  </update>
+</mapper>

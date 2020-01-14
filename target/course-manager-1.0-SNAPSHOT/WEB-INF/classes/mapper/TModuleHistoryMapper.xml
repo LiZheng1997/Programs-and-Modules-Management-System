@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TModuleHistoryMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TModuleHistory" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="type_id" property="typeId" jdbcType="BIGINT" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="module_id" property="moduleId" jdbcType="BIGINT" />
+    <result column="element" property="element" jdbcType="VARCHAR" />
+    <result column="operation" property="operation" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, create_by, type, type_id, note, create_time, module_id, element, operation
+  </sql>
+
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleHistory" >
+    insert into t_module_history (id, create_by, type, type_id, note, create_time, module_id, element, operation
+    )
+    values (#{id,jdbcType=BIGINT}, #{createBy,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{typeId,jdbcType=BIGINT}, #{note,jdbcType=VARCHAR},
+            #{createTime,jdbcType=TIMESTAMP}, #{moduleId,jdbcType=BIGINT}, #{element,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}
+           )
+  </insert>
+
+
+  <select id="selectByModuleId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_module_history
+    where module_id = #{moduleId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll"  resultMap="BaseResultMap" >
+    select * from t_module_history
+  </select>
+
+
+</mapper>

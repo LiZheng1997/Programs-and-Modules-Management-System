@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TProgramMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgram" >
+    <id column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="program_code" property="programCode" jdbcType="VARCHAR" />
+    <result column="program_title" property="programTitle" jdbcType="VARCHAR" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithBLOBs" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgram" extends="BaseResultMap" >
+    <result column="objectives" property="objectives" jdbcType="LONGVARCHAR" />
+    <result column="program_title" property="programTitle" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithPart" type="java.util.HashMap" >
+    <result column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="program_title" property="programTitle" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithAims" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramAim">
+    <result column="aim_id" property="aimId" jdbcType="BIGINT" />
+    <result column="aim_description" property="aimDescription" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithSkills" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramSkill">
+    <result column="skill_id" property="skillId" jdbcType="BIGINT" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithKnowledge" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramKnowledge">
+    <result column="knowledge_id" property="knowledgeId" jdbcType="BIGINT" />
+    <result column="knowledge_context" property="knowledgeContext" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithCoreModules" type="uk.ac.sheffield.coursemgr.domain.pojo.TCoreModule">
+    <result column="core_module_id" property="coreModuleId" jdbcType="BIGINT"/>
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="ResultMapWithOptionalModules" type="uk.ac.sheffield.coursemgr.domain.pojo.TOptionalModule">
+    <result column="optional_module_id" property="optionalModuleId" jdbcType="BIGINT" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    program_id, program_code, program_title, update_by, update_time, create_by, create_time
+  </sql>
+
+  <sql id="Blob_Column_List" >
+    objectives
+  </sql>
+
+  <sql id="Part_Column_List" >
+    program_id, program_title, create_by
+  </sql>
+
+  <select id="selectAll"  resultMap="ResultMapWithBLOBs" >
+    select * from t_program
+  </select>
+
+  <select id="selectPartProgram"  resultMap="ResultMapWithPart">
+    select
+    <include refid="Part_Column_List" />
+    from t_program
+  </select>
+
+  <select id="selectPartProgramByProgramAim"  resultMap="ResultMapWithPart">
+    select
+    <include refid="Part_Column_List" />
+    from t_program
+    where program_aim_id = #{programAimId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectPartProgramByLo"  resultMap="ResultMapWithPart">
+    select
+    <include refid="Part_Column_List" />
+    from t_program
+    where program_lo_id = #{programLoId,jdbcType=BIGINT}
+  </select>
+
+  <select id="countProgram" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgram" resultType="java.lang.Integer" >
+    select count(*) from t_program
+  </select>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgram" >
+    insert into t_program (program_id, program_code, program_title,
+                          update_by, update_time,
+                           create_by, create_time)
+    values (#{programId,jdbcType=BIGINT}, #{programCode,jdbcType=VARCHAR}, #{programTitle,jdbcType=VARCHAR},
+            #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP},
+            #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_program
+    where program_id = #{programId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgram" >
+    update t_program
+    set program_code = #{programCode,jdbcType=VARCHAR},
+        program_title = #{programTitle,jdbcType=VARCHAR},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
+    where program_id = #{programId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_program
+    where program_id = #{programId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAims" resultMap="ResultMapWithAims" parameterType="java.lang.Long" >
+    select aim_id, aim_description
+    from t_program_aim
+    where program_id = #{programId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectSkills" resultMap="ResultMapWithSkills" parameterType="java.lang.Long" >
+    select skill_id, context
+    from t_program_skill
+    where program_id = #{programId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectKnowledge" resultMap="ResultMapWithKnowledge" parameterType="java.lang.Long" >
+    select knowledge_id, knowledge_context
+    from t_program_knowledge
+    where program_id = #{programId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectCores" resultMap="ResultMapWithCoreModules" parameterType="java.lang.Long" >
+    select core_module_id,update_by, update_time, create_by, create_time
+    from t_core_module
+    where program_id = #{programId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectOptionals" resultMap="ResultMapWithOptionalModules" parameterType="java.lang.Long" >
+    select optional_module_id, update_by, update_time, create_by, create_time
+    from t_optional_module
+    where program_id = #{programId,jdbcType=BIGINT}
+  </select>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="uk.ac.sheffield.coursemgr.mapper.TProgramSkillMapper" >
+  <resultMap id="BaseResultMap" type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramSkill" >
+    <id column="skill_id" property="skillId" jdbcType="BIGINT" />
+    <result column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="program_code" property="programCode" jdbcType="VARCHAR" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <resultMap id="SkillToLo"   type="uk.ac.sheffield.coursemgr.domain.pojo.TProgramSkill">
+    <id column="skill_id" property="skillId" jdbcType="BIGINT" />
+    <result column="program_id" property="programId" jdbcType="BIGINT" />
+    <result column="program_code" property="programCode" jdbcType="VARCHAR" />
+    <result column="context" property="context" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <collection property="moduleLos" ofType="uk.ac.sheffield.coursemgr.domain.pojo.TModuleLo">
+      <id column="module_lo_id" property="moduleLoId" jdbcType="BIGINT" />
+      <result column="module_code" property="moduleCode" jdbcType="VARCHAR" />
+      <result column="context" property="context" jdbcType="VARCHAR" />
+      <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    skill_id, program_code, context, create_by, create_time, update_by, update_time
+  </sql>
+
+  <!--select all info from program skill and lo  -->
+  <select id="selectModuleLoSkill" resultMap="SkillToLo">
+    select
+      s.*, l.* from
+                 t_program_skill s, t_module_lo l, t_program_skill_to_module_lo sl
+    where s.skill_id = sl.skill_id and l.module_lo_id = sl.lo_id and s.skill_id = #{skillId,jdbcType=BIGINT}
+
+  </select>
+
+  <!--select all info from program skill and lo  -->
+  <select id="selectSkillToLo" resultMap="SkillToLo">
+    select
+      s.*, l.* from
+                 t_program_skill s, t_module_lo l, t_program_skill_to_module_lo sl
+    where s.skill_id = sl.skill_id and l.module_lo_id = sl.lo_id
+
+  </select>
+
+  <select id="countProgramSkill" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgramSkill" resultType="java.lang.Integer" >
+    select count(*) from t_program_skill
+  </select>
+
+  <insert id="insert" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgramSkill" >
+    insert into t_program_skill (skill_id, program_id,program_code, context,
+                                 create_by, create_time, update_by,
+                                 update_time)
+    values (#{skillId,jdbcType=BIGINT},#{programId,jdbcType=BIGINT}, #{programCode,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR},
+            #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_program_skill
+    where skill_id = #{skillId,jdbcType=BIGINT}
+  </delete>
+
+  <update id="updateByPrimaryKey" parameterType="uk.ac.sheffield.coursemgr.domain.pojo.TProgramSkill" >
+    update t_program_skill
+    set program_code = #{programCode,jdbcType=VARCHAR},
+        program_id = #{programId,jdbcType=BIGINT},
+        context = #{context,jdbcType=VARCHAR},
+        create_by = #{createBy,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=VARCHAR},
+        update_by = #{updateBy,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=VARCHAR}
+    where skill_id = #{skillId,jdbcType=BIGINT}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from t_program_skill
+    where skill_id = #{skillId,jdbcType=BIGINT}
+  </select>
+
+  <select id="selectAll"  resultMap="BaseResultMap" >
+    select * from t_program_skill
+  </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
